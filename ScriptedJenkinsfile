@@ -1,0 +1,17 @@
+node("ubuntu"){
+    stage("Git checkout"){
+        dir('jenkins'){
+            git branch: 'main', credentialsId: 'bcc2cf81k-5935-3fb5-j9a8-mvj8b4704ncm', url: 'git@github.com:GribovMaksim/jenkins.git'
+        }
+    }
+    stage("Download Ansible roles"){
+        dir('jenkins'){
+            sh 'ansible-galaxy install -r requirements.yml -p roles --force'
+        }
+    }
+    stage("Run playbook"){
+        dir('jenkins'){
+            sh 'ansible-playbook site.yml -i inventory/prod.yml'
+        }
+    }
+}
